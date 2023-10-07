@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <child-component v-bind:propsdata="message"></child-component>
+        <child-component2 v-bind:items="items" v-on:show-log="printText"></child-component2>
+    </div>
+    <hr>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.2/dist/vue.js"></script>
+    <script>
+        Vue.component('child-component', {
+            props: ['propsdata'],
+            template: `<p>{{propsdata}}</p>`
+        });
+        Vue.component('child-component2', {
+            props: ['items'],
+            template: `<div><input v-on:change="items.quantity = $event.target.value"
+                       v-bind:value="items.quantity" min="0"></input>
+                       <button v-on:click="showLog($event.target.value)">show</button></div>`,
+            methods: {
+                showLog: function() {
+                    this.$emit('show-log');
+                    console.log(items.name, items.quantity);
+                }
+            }
+        });
+        var items = {name: '연필', price: 300, quantity: 0};
+
+        new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue! passed from Parent Component',
+                items: items
+            },
+            methods: {
+                printText: function() {
+                    console.log("received an event");
+                }
+            }
+        });
+    </script>
+</body>
+</html>
